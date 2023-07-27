@@ -1,0 +1,1 @@
+/root/.rover/bin/rover supergraph compose --config /graph/supergraph-config.yaml > /graph/supergraph.graphql --client-timeout 300

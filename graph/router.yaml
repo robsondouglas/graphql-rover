@@ -1,0 +1,10 @@
+headers:
+  all:
+    request:
+      - propagate: 
+          name: "Authorization"
+include_sibgraphs_errors:
+  all: true
+cors:
+  origins:
+    - http://localhost:3000

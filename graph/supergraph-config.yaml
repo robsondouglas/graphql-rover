@@ -1,0 +1,14 @@
+federation_version: 2
+subgraphs:
+  veiculo:
+    routing_url:  https://kruaylxn3a.execute-api.sa-east-1.amazonaws.com/
+    schema:
+      subgraph_url:  https://kruaylxn3a.execute-api.sa-east-1.amazonaws.com/
+  cidadao:
+    routing_url: https://jkmwsipoth.execute-api.sa-east-1.amazonaws.com/
+    schema:
+      subgraph_url: https://jkmwsipoth.execute-api.sa-east-1.amazonaws.com/
+  multa:
+    routing_url: https://on6nqfxrdf.execute-api.sa-east-1.amazonaws.com/
+    schema:
+      subgraph_url: https://on6nqfxrdf.execute-api.sa-east-1.amazonaws.com/
