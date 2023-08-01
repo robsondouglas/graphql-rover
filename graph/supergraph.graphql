@@ -1,0 +1,298 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION)
+{
+  query: Query
+  mutation: Mutation
+}
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(graph: join__Graph, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true, isInterfaceObject: Boolean! = false) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+type Cidadao
+  @join__type(graph: CIDADAO, key: "IdCidadao")
+  @join__type(graph: VEICULO, key: "IdCidadao", extension: true)
+{
+  """Identificador do cidadão"""
+  IdCidadao: String
+
+  """Nome do cidadão"""
+  Nome: String @join__field(graph: CIDADAO)
+
+  """Email do cidadão"""
+  Email: String @join__field(graph: CIDADAO)
+
+  """Data de nascimento do cidadão"""
+  Nascimento: Float @join__field(graph: CIDADAO)
+
+  """Registro da habilitação do cidadão"""
+  CNH: String @join__field(graph: CIDADAO)
+
+  """Sexo do cidadão (Masculino/Feminino)"""
+  Sexo: String @join__field(graph: CIDADAO)
+
+  """Lista de telefones"""
+  Telefones: [String] @join__field(graph: CIDADAO)
+
+  """Status de Ativo/Inativo"""
+  Status: String @join__field(graph: CIDADAO)
+
+  """Data de inclusão"""
+  DateAdd: Float @join__field(graph: CIDADAO)
+  Veiculos: [Veiculo!] @join__field(graph: VEICULO)
+}
+
+input CidadaoInput
+  @join__type(graph: CIDADAO)
+{
+  """Nome do cidadão"""
+  Nome: String
+
+  """Email do cidadão e que será usado como login"""
+  Email: String
+
+  """Data de nascimento do cidadão"""
+  Nascimento: Float
+
+  """Registro da habilitação do cidadão"""
+  CNH: String
+
+  """Sexo do cidadão (Masculino/Feminino)"""
+  Sexo: String
+
+  """Lista de telefones"""
+  Telefones: [String]
+}
+
+type Fabricante
+  @join__type(graph: VEICULO)
+{
+  """Identificador do Fabricante"""
+  Id: ID!
+
+  """Nome do Fabricante"""
+  Nome: String
+
+  """Modelos do fabricante"""
+  Modelos: [Modelo!]
+}
+
+type Infracao
+  @join__type(graph: MULTA, key: "Id")
+{
+  """Identificador do Fabricante"""
+  Id: String
+
+  """Nome do Fabricante"""
+  Nome: String
+
+  """Valor da multa"""
+  Valor: Float
+
+  """Gravidade da infração"""
+  Gravidade: String
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  CIDADAO @join__graph(name: "cidadao", url: "https://jkmwsipoth.execute-api.sa-east-1.amazonaws.com/")
+  MULTA @join__graph(name: "multa", url: "https://zw2sb7aw8k.execute-api.sa-east-1.amazonaws.com/")
+  VEICULO @join__graph(name: "veiculo", url: "https://kruaylxn3a.execute-api.sa-east-1.amazonaws.com/")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type Modelo
+  @join__type(graph: VEICULO)
+{
+  """Identificador do Modelo"""
+  Id: ID!
+
+  """Nome do Modelo"""
+  Nome: String
+
+  """Referência ao fabricante"""
+  Fabricante: Fabricante
+}
+
+type Multa
+  @join__type(graph: MULTA, key: "Id")
+  @join__type(graph: VEICULO, key: "Id", resolvable: false)
+{
+  """Identificador da multa"""
+  Id: String
+
+  """Dados da infraçãao"""
+  Infracao: Infracao @join__field(graph: MULTA)
+
+  """Dados do veículo"""
+  Veiculo: Veiculo @join__field(graph: MULTA)
+
+  """Data que a infração ocorreu"""
+  DateAdd: Float @join__field(graph: MULTA)
+
+  """Data que a infração foi paga"""
+  DatePay: Float @join__field(graph: MULTA)
+}
+
+input MultaInput
+  @join__type(graph: MULTA)
+{
+  """Placa do carro padrão Brasil 3 letras ou Mercosul"""
+  Placa: String
+
+  """Identificador do proprietário do veículo"""
+  IdInfracao: String
+}
+
+type Mutation
+  @join__type(graph: CIDADAO)
+  @join__type(graph: MULTA)
+  @join__type(graph: VEICULO)
+{
+  """Inclui um cidadão"""
+  addCidadao(itm: CidadaoInput): Boolean @join__field(graph: CIDADAO)
+
+  """Bloqueia/Desbloqueia um cidadão"""
+  toggleCidadao(IdCidadao: String): Boolean @join__field(graph: CIDADAO)
+
+  """Inclui um veículo"""
+  addMulta(itm: MultaInput): Boolean @join__field(graph: MULTA)
+
+  """Remove um veículo"""
+  payMulta(Id: Int): Boolean @join__field(graph: MULTA)
+
+  """Inclui um veículo"""
+  addVeiculo(itm: VeiculoInput): Boolean @join__field(graph: VEICULO)
+
+  """Remove um veículo"""
+  delVeiculo(Placa: String): Boolean @join__field(graph: VEICULO)
+}
+
+type Query
+  @join__type(graph: CIDADAO)
+  @join__type(graph: MULTA)
+  @join__type(graph: VEICULO)
+{
+  """Lista todos os cidadãos"""
+  cidadaos(Page: Int, Nome: String): [Cidadao] @join__field(graph: CIDADAO)
+
+  """Obtem os dados do cidadão"""
+  cidadao(Id: String): Cidadao @join__field(graph: CIDADAO)
+
+  """Lista todas as infrações"""
+  infracoes(Nome: String): [Infracao] @join__field(graph: MULTA)
+
+  """Obtem os dados da infração"""
+  infracao(Id: Int): Infracao @join__field(graph: MULTA)
+
+  """Lista todos os modelos de um fabricante"""
+  multas(placa: String!, situacao: SituacaoMulta): [Multa] @join__field(graph: MULTA)
+
+  """Obtem os dados de um modelo"""
+  multa(Id: String): Multa @join__field(graph: MULTA)
+
+  """Lista todos os fabricantes"""
+  fabricantes(Nome: String): [Fabricante] @join__field(graph: VEICULO)
+
+  """Obtem os dados do fabricante"""
+  fabricante(Id: String): Fabricante @join__field(graph: VEICULO)
+
+  """Lista todos os modelos de um fabricante"""
+  modelos(IdFabricante: String): [Modelo] @join__field(graph: VEICULO)
+
+  """Obtem os dados de um modelo"""
+  modelo(IdModelo: String): Modelo @join__field(graph: VEICULO)
+
+  """Lista os veículos de um proprietário"""
+  veiculos(IdProprietario: String): [Veiculo] @join__field(graph: VEICULO)
+
+  """Obtém os dados de um veículo pela placa"""
+  veiculo(Placa: String): Veiculo @join__field(graph: VEICULO)
+}
+
+enum SituacaoMulta
+  @join__type(graph: MULTA)
+{
+  PENDENTE @join__enumValue(graph: MULTA)
+  QUITADO @join__enumValue(graph: MULTA)
+}
+
+type Veiculo
+  @join__type(graph: MULTA, key: "Placa", extension: true)
+  @join__type(graph: VEICULO, key: "Placa")
+{
+  """Placa do veículo"""
+  Placa: String!
+  MultasPendentes: [Multa] @join__field(graph: MULTA)
+  MultasQuitadas: [Multa] @join__field(graph: MULTA)
+
+  """Chassis do veículo"""
+  Chassis: String @join__field(graph: VEICULO)
+
+  """Ano de fabricação"""
+  Ano: Int @join__field(graph: VEICULO)
+
+  """Cor predominante"""
+  Cor: String @join__field(graph: VEICULO)
+
+  """Fabricante do veículo"""
+  Fabricante: Fabricante @join__field(graph: VEICULO)
+
+  """Modelo do veículo"""
+  Modelo: Modelo @join__field(graph: VEICULO)
+
+  """Proprietário do veículo"""
+  Proprietario: Cidadao @join__field(graph: VEICULO)
+}
+
+input VeiculoInput
+  @join__type(graph: VEICULO)
+{
+  """Placa do carro padrão Brasil 3 letras ou Mercosul"""
+  Placa: String
+
+  """Identificador do proprietário do veículo"""
+  IdProprietario: String
+
+  """
+  Chassis do veículo, string aleatória com 17 caracteres, sem validação de formato
+  """
+  Chassis: String
+
+  """Ano de fabricação"""
+  Ano: Int
+
+  """Identificador do Fabricante do veículo"""
+  IdFabricante: String
+
+  """Modelo do veículo"""
+  IdModelo: String
+
+  """Cor predominante"""
+  Cor: String
+}

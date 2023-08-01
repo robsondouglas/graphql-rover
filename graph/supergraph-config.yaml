@@ -9,6 +9,6 @@ subgraphs:
     schema:
       subgraph_url: https://jkmwsipoth.execute-api.sa-east-1.amazonaws.com/
   multa:
-    routing_url: https://on6nqfxrdf.execute-api.sa-east-1.amazonaws.com/
+    routing_url: https://zw2sb7aw8k.execute-api.sa-east-1.amazonaws.com/
     schema:
-      subgraph_url: https://on6nqfxrdf.execute-api.sa-east-1.amazonaws.com/
+      subgraph_url: https://zw2sb7aw8k.execute-api.sa-east-1.amazonaws.com/
