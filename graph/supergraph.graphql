@@ -50,6 +50,8 @@ type Cidadao
 
   """Data de inclusão"""
   DateAdd: Float @join__field(graph: CIDADAO)
+
+  """Lista de veículos do cidadão"""
   Veiculos: [Veiculo!] @join__field(graph: VEICULO)
 }
 
@@ -202,7 +204,7 @@ type Query
   cidadaos(Page: Int, Nome: String): [Cidadao] @join__field(graph: CIDADAO)
 
   """Obtem os dados do cidadão"""
-  cidadao(Id: String): Cidadao @join__field(graph: CIDADAO)
+  cidadao(IdCidadao: String): Cidadao @join__field(graph: CIDADAO)
 
   """Lista todas as infrações"""
   infracoes(Nome: String): [Infracao] @join__field(graph: MULTA)
@@ -210,7 +212,7 @@ type Query
   """Obtem os dados da infração"""
   infracao(Id: Int): Infracao @join__field(graph: MULTA)
 
-  """Lista todos os modelos de um fabricante"""
+  """Lista todas as multas de um veículo"""
   multas(placa: String!, situacao: SituacaoMulta): [Multa] @join__field(graph: MULTA)
 
   """Obtem os dados de um modelo"""
@@ -265,8 +267,6 @@ type Veiculo
 
   """Modelo do veículo"""
   Modelo: Modelo @join__field(graph: VEICULO)
-
-  """Proprietário do veículo"""
   Proprietario: Cidadao @join__field(graph: VEICULO)
 }
 

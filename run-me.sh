@@ -1,6 +1,6 @@
-FILE=./graph/supergraph.graphqlz
-if ! -f "$FILE"; then
-  echo "***************## CONFIGURANDO O ROVER *****************"
+#!/bin/bash
+FILE=./graph/supergraph.graphql
+if ! test -f "$FILE"; then
   docker build . -t rover
   docker run -p 4000:4000 \
     --name rover-exec \
@@ -22,7 +22,6 @@ docker run -p 4000:4000 \
   --mount "type=bind,source=./graph/router.yaml,target=/dist/config/router.yaml" \
   --rm  \
   ghcr.io/apollographql/router:v1.25.0 \
-  --log debug \
   --supergraph="/dist/config/supergraph.graphql"\
   --dev  
-  ho "*********************************************************"
+echo "*********************************************************" 
