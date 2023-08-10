@@ -2,10 +2,10 @@ supergraph:
   listen: 0.0.0.0:4000
 cors:
   origins:
-    - http://localhost:5000
-    - http://localhost:5001
-    - http://localhost:5002
-    - http://localhost:5003
+    - https://studio.apollographql.com
+    - https://d23y3cgatdhyih.cloudfront.net	
+    - https://d1tm9k67qywe60.cloudfront.net
+    - https://d2ipgxamihfp6w.cloudfront.net
 headers:
   all:
     request:
